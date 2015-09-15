@@ -60,7 +60,23 @@ Also note that you can include comments in the snippet, both styles (`//` and `/
 
 The major restriction is that the JavaScript object must be **static**, i.e. it cannot include function calls or function expressions, for security reasons.
 
+## Options ##
+The `<amchart>` tag can carry optional attributes to customize the appearance of the chart. The attributes are separated by spaces, each specified in the format of `name=value`. Valid attributes are:
 
+| Name     | Description |
+|:--------:|:----------- |
+| `width`  | Width of the chart, specified in CSS format, e.g. 50% or 320px. |
+| `height` | Height of the chart, in the same format as `width`. |
+| `align`  | Chart alignment, can be `left`, `right` or `center`. |
+
+For instance to make your chart occupying half width of its container and floated to the right:
+```
+<amchart align="right" width=50% >
+  {
+    ...
+  }
+</amchart>
+```
 
 ## License ##
 Copyright (C) Sylvain Menu
