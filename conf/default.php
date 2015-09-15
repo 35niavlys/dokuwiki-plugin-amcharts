@@ -6,7 +6,7 @@
  */
 
 $conf['url_yaml']		= 'js-yaml.min.js';
-$conf['url_amcharts']	= 'amcharts';
+$conf['url_amcharts']	= 'amcharts/';
 $conf['amcharts_lang']	= 'en';
 $conf['amcharts_themes'] = 'black|chalk|dark|light|patterns';
 $conf['width']			= '';
