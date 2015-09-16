@@ -78,6 +78,9 @@ For instance to make your chart occupying half width of its container and floate
 </amchart>
 ```
 
+## Thanks ##
+This plugin is based on [dokuwiki-plugin-c3chart](https://github.com/jasonxxu/dokuwiki-plugin-c3chart) created by @jasonxxu, thanks to him.
+
 ## License ##
 Copyright (C) Sylvain Menu
 
