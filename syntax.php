@@ -48,7 +48,7 @@ class syntax_plugin_amcharts extends DokuWiki_Syntax_Plugin {
      * @return array Data for the renderer
      */
     public function handle($match, $state, $pos, Doku_Handler &$handler){
-        $match = substr(trim($match), 9, -10);
+        $match = substr(trim($match), 8, -10);
         list($opts, $amdata) = explode('>', $match, 2);
         preg_match_all('/(\S+)=["\']?((?:.(?!["\']?\s+(?:\S+)=|[>"\']))+.)["\']?/', $opts, $matches, PREG_SET_ORDER);
         $opts = array(
