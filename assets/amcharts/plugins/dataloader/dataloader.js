@@ -2,7 +2,7 @@
 Plugin Name: amCharts Data Loader
 Description: This plugin adds external data loading capabilities to all amCharts libraries.
 Author: Martynas Majeris, amCharts
-Version: 1.0.8
+Version: 1.0.12
 Author URI: http://www.amcharts.com/
 
 Copyright 2015 amCharts
@@ -75,6 +75,7 @@ AmCharts.addInitHandler( function( chart ) {
     'timestamp': false,
     'delimiter': ',',
     'skip': 0,
+    'skipEmpty': true,
     'useColumnNames': false,
     'reverse': false,
     'reloading': false,
@@ -251,16 +252,46 @@ AmCharts.addInitHandler( function( chart ) {
           // take in the new data
           if ( options.async ) {
 
-            if ( 'map' === chart.type )
+            if ( 'map' === chart.type ) {
+
+              // take in new data
               chart.validateNow( true );
-            else {
+
+              // remove curtain
+              removeCurtain();
+              
+            } else {
+
+              // add a dataUpdated event to handle post-load stuff
+              if ( 'gauge' !== chart.type ) {
+                chart.addListener( "dataUpdated", function( event ) {
+
+                  // restore default period (stock chart)
+                  if ( 'stock' === chart.type && !options.reloading && undefined !== chart.periodSelector ) {
+                    chart.periodSelector.setDefaultPeriod();
+                  }
+
+                  // remove curtain
+                  removeCurtain();
+
+                  // remove this listener
+                  chart.events.dataUpdated.pop();
+                } );
+              }
+
 
               // take in new data
               chart.validateData();
 
               // invalidate size for the pie chart
-              if ( 'pie' === chart.type && chart.invalidateSize !== undefined )
-                chart.invalidateSize();
+              // disabled for now as it is not longer necessary
+              /*if ( 'pie' === chart.type && chart.invalidateSize !== undefined )
+                chart.invalidateSize();*/
+
+              // gauge chart does not trigger dataUpdated event
+              // let's explicitly remove the curtain for it
+              if ( 'gauge' === chart.type )
+                removeCurtain();
 
               // make the chart animate again
               if ( l.startDuration ) {
@@ -279,12 +310,6 @@ AmCharts.addInitHandler( function( chart ) {
             }
           }
 
-          // restore default period
-          if ( 'stock' === chart.type && !options.reloading && undefined !== chart.periodSelector )
-            chart.periodSelector.setDefaultPeriod();
-
-          // remove curtain
-          removeCurtain();
         }
 
         // schedule another load if necessary
@@ -448,6 +473,12 @@ if ( undefined === AmCharts.__ ) {
  */
 AmCharts.loadFile = function( url, options, handler ) {
 
+  // prepopulate options with minimal defaults if necessary
+  if ( typeof( options ) !== "object" )
+    options = {};
+  if ( options.async === undefined )
+    options.async = true;
+
   // create the request
   var request;
   if ( window.XMLHttpRequest ) {
@@ -466,7 +497,7 @@ AmCharts.loadFile = function( url, options, handler ) {
   }
 
   // add headers?
-  if ( options.headers.length ) {
+  if ( options.headers !== undefined && options.headers.length ) {
     for ( var i = 0; i < options.headers.length; i++ ) {
       var header = options.headers[ i ];
       request.setRequestHeader( header.key, header.value );
@@ -547,6 +578,8 @@ AmCharts.parseCSV = function( response, options ) {
   // iterate through the result set
   var row;
   while ( ( row = options.reverse ? data.pop() : data.shift() ) ) {
+    if ( options.skipEmpty && row.length === 1 && row[ 0 ] === '' )
+      continue;
     var dataPoint = {};
     for ( i = 0; i < row.length; i++ ) {
       col = undefined === cols[ i ] ? 'col' + i : cols[ i ];
