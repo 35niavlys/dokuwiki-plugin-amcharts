@@ -37,51 +37,26 @@ class action_plugin_amcharts extends DokuWiki_Action_Plugin {
             "_data" => "",
         );
 		
-		$amfiles = array("amcharts.js", "funnel.js", "gantt.js", "gauge.js", "pie.js", "radar.js", "serial.js", "xy.js");
 		$url_amcharts = $this->getConf('url_amcharts');
-		foreach($amfiles as $file) {
+		
+		$jsfiles = split("\|", $this->getConf('amcharts_js'));
+		foreach($jsfiles as $jsfile) {
 			$event->data["script"][] = array (
 				"type" => "text/javascript",
-				"src" => $this->get_asset($url_amcharts.'/'.$file),
-				"_data" => "",
+				"src" => $this->get_asset($url_amcharts.'/'.$jsfile),
+				"_data" => ""
 			);
 		}
 		
-		$lang = $this->getConf('amcharts_lang');
-		if($lang != 'en') {
+		$cssfiles = split("\|", $this->getConf('amcharts_css'));
+		foreach($cssfiles as $cssfile) {
 			$event->data["script"][] = array (
-				"type" => "text/javascript",
-				"src" => $this->get_asset($url_amcharts.'/lang/'.$lang.'.js'),
-				"_data" => "",
+				"type" => "text/css",
+				"rel" => "stylesheet",
+				"href" => $this->get_asset($url_amcharts.'/'.$cssfile)
 			);
 		}
 		
-		$themes = split("\|", $this->getConf('amcharts_themes'));
-		foreach($themes as $theme) {
-			$event->data["script"][] = array (
-				"type" => "text/javascript",
-				"src" => $this->get_asset($url_amcharts.'/themes/'.$theme.'.js'),
-				"_data" => "",
-			);
-		}
-		$plugins = array("dataloader", "export", "responsive");
-		foreach($plugins as $plugin) {
-			$event->data["script"][] = array (
-				"type" => "text/javascript",
-				"src" => $this->get_asset($url_amcharts.'/plugins/'.$plugin.'/'.$plugin.'.min.js'),
-				"_data" => "",
-			);
-		}
-		$event->data["script"][] = array (
-			"type" => "text/javascript",
-			"src" => $this->get_asset($url_amcharts.'/plugins/export/lang/'.$lang.'.js'),
-			"_data" => "",
-		);
-        $event->data["link"][] = array (
-            "type" => "text/css",
-            "rel" => "stylesheet",
-            "href" => $this->get_asset($url_amcharts.'/plugins/export/export.css'),
-        );
     }
 
     private function get_asset($resource) {
