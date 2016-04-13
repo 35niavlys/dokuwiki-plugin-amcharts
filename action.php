@@ -50,7 +50,7 @@ class action_plugin_amcharts extends DokuWiki_Action_Plugin {
 		
 		$cssfiles = split("\|", $this->getConf('amcharts_css'));
 		foreach($cssfiles as $cssfile) {
-			$event->data["script"][] = array (
+			$event->data["link"][] = array (
 				"type" => "text/css",
 				"rel" => "stylesheet",
 				"href" => $this->get_asset($url_amcharts.'/'.$cssfile)
