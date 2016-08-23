@@ -1,7 +1,7 @@
 base   amcharts
 author Sylvain Menu
 email  35niavlys@gmail.com
-date   2016-04-13
+date   2016-08-23
 name   AmCharts Plugin
 desc   Inserts interactive data charts rendered by AmCharts
 url    https://github.com/35niavlys/dokuwiki-plugin-amcharts
