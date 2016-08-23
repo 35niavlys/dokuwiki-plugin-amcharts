@@ -37,26 +37,26 @@ class action_plugin_amcharts extends DokuWiki_Action_Plugin {
             "_data" => "",
         );
 		
-		$url_amcharts = $this->getConf('url_amcharts');
-		
-		$jsfiles = split("\|", $this->getConf('amcharts_js'));
-		foreach($jsfiles as $jsfile) {
-			$event->data["script"][] = array (
-				"type" => "text/javascript",
-				"src" => $this->get_asset($url_amcharts.'/'.$jsfile),
-				"_data" => ""
-			);
-		}
-		
-		$cssfiles = split("\|", $this->getConf('amcharts_css'));
-		foreach($cssfiles as $cssfile) {
-			$event->data["link"][] = array (
-				"type" => "text/css",
-				"rel" => "stylesheet",
-				"href" => $this->get_asset($url_amcharts.'/'.$cssfile)
-			);
-		}
-		
+	$url_amcharts = $this->getConf('url_amcharts');
+	
+	$jsfiles = preg_split("/\|/", $this->getConf('amcharts_js'));
+	foreach($jsfiles as $jsfile) {
+		$event->data["script"][] = array (
+			"type" => "text/javascript",
+			"src" => $this->get_asset($url_amcharts.'/'.$jsfile),
+			"_data" => ""
+		);
+	}
+	
+	$cssfiles = preg_split("/\|/", $this->getConf('amcharts_css'));
+	foreach($cssfiles as $cssfile) {
+		$event->data["link"][] = array (
+			"type" => "text/css",
+			"rel" => "stylesheet",
+			"href" => $this->get_asset($url_amcharts.'/'.$cssfile)
+		);
+	}
+	
     }
 
     private function get_asset($resource) {
